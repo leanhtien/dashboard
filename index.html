@@ -16,7 +16,7 @@
       --muted: #66738a;
       --line: #c9e8f1;
       --card: rgba(255, 255, 255, 0.82);
-      --shadow: 0 12px 35px rgba(30, 79, 110, 0.16);
+      --shadow: 0 10px 28px rgba(30, 79, 110, 0.14);
     }
 
     * {
@@ -42,8 +42,8 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 14px;
-      gap: 12px;
+      padding: 8px;
+      gap: 8px;
     }
 
     .topbar {
@@ -51,14 +51,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      min-height: 76px;
-      padding: 12px 18px;
+      gap: 12px;
+      min-height: 54px;
+      padding: 7px 12px;
       background:
         linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(241, 253, 255, 0.88)),
         linear-gradient(90deg, rgba(14, 165, 233, 0.13), rgba(88, 199, 107, 0.13));
       border: 1px solid rgba(168, 221, 235, 0.95);
-      border-radius: 26px;
+      border-radius: 20px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(16px);
       z-index: 5;
@@ -70,9 +70,9 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(15, 159, 154, 0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 159, 154, 0.055) 1px, transparent 1px);
-      background-size: 36px 36px;
+        linear-gradient(rgba(15, 159, 154, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 159, 154, 0.045) 1px, transparent 1px);
+      background-size: 32px 32px;
       pointer-events: none;
     }
 
@@ -80,42 +80,42 @@
       position: relative;
       display: flex;
       align-items: center;
-      gap: 12px;
-      min-width: 270px;
+      gap: 9px;
+      min-width: 220px;
     }
 
     .brand-icon {
-      width: 48px;
-      height: 48px;
+      width: 36px;
+      height: 36px;
       display: grid;
       place-items: center;
-      border-radius: 18px;
+      border-radius: 14px;
       background: linear-gradient(135deg, var(--cyan), var(--teal) 48%, var(--green));
       color: #fff;
-      font-size: 24px;
-      box-shadow: 0 10px 24px rgba(15, 159, 154, 0.26);
+      font-size: 18px;
+      box-shadow: 0 8px 18px rgba(15, 159, 154, 0.22);
     }
 
     .brand-text {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
 
     .eyebrow {
-      font-size: 11px;
+      font-size: 9px;
       font-weight: 900;
-      letter-spacing: 1.8px;
+      letter-spacing: 1.35px;
       text-transform: uppercase;
       color: var(--muted);
     }
 
     .page-title {
       margin: 0;
-      font-size: 22px;
-      line-height: 1.1;
+      font-size: 18px;
+      line-height: 1.05;
       font-weight: 900;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
       background: linear-gradient(90deg, #0795b3 0%, #0fb983 48%, #88bd26 100%);
       -webkit-background-clip: text;
@@ -129,7 +129,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 7px;
       flex: 1;
       flex-wrap: wrap;
     }
@@ -137,22 +137,22 @@
     .tab-button,
     .select-screen,
     .reload-button {
-      height: 44px;
-      border-radius: 16px;
+      height: 34px;
+      border-radius: 12px;
       border: 1px solid rgba(184, 205, 221, 0.95);
       background: rgba(255, 255, 255, 0.78);
       color: #2d3748;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 900;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.15px;
       cursor: pointer;
       transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-      box-shadow: 0 4px 12px rgba(45, 68, 95, 0.06);
+      box-shadow: 0 3px 10px rgba(45, 68, 95, 0.055);
     }
 
     .tab-button {
-      min-width: 126px;
-      padding: 0 18px;
+      min-width: 108px;
+      padding: 0 12px;
     }
 
     .tab-button:hover,
@@ -160,14 +160,14 @@
     .select-screen:hover {
       transform: translateY(-1px);
       border-color: rgba(15, 159, 154, 0.55);
-      box-shadow: 0 10px 22px rgba(30, 79, 110, 0.12);
+      box-shadow: 0 8px 18px rgba(30, 79, 110, 0.1);
     }
 
     .tab-button.active {
       border: none;
       color: #ffffff;
       background: linear-gradient(135deg, #0894b3 0%, #12b886 50%, #72c247 100%);
-      box-shadow: 0 10px 26px rgba(17, 173, 137, 0.32);
+      box-shadow: 0 8px 22px rgba(17, 173, 137, 0.28);
       position: relative;
       overflow: hidden;
     }
@@ -190,8 +190,8 @@
     }
 
     .select-screen {
-      min-width: 170px;
-      padding: 0 42px 0 16px;
+      min-width: 152px;
+      padding: 0 34px 0 12px;
       outline: none;
       appearance: none;
       background-image:
@@ -199,29 +199,29 @@
         linear-gradient(135deg, #172033 50%, transparent 50%),
         linear-gradient(135deg, rgba(255,255,255,0.9), rgba(245,253,255,0.84));
       background-position:
-        calc(100% - 22px) 19px,
-        calc(100% - 16px) 19px,
+        calc(100% - 18px) 15px,
+        calc(100% - 13px) 15px,
         0 0;
       background-size:
-        6px 6px,
-        6px 6px,
+        5px 5px,
+        5px 5px,
         100% 100%;
       background-repeat: no-repeat;
     }
 
     .reload-button {
-      width: 44px;
+      width: 36px;
       display: grid;
       place-items: center;
       padding: 0;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .frame-shell {
       position: relative;
       flex: 1;
       min-height: 0;
-      border-radius: 28px;
+      border-radius: 22px;
       background:
         linear-gradient(135deg, rgba(255,255,255,0.96), rgba(238, 252, 255, 0.88)),
         radial-gradient(circle at top left, rgba(14, 165, 233, 0.12), transparent 30%),
@@ -236,7 +236,7 @@
       position: absolute;
       inset: 0;
       padding: 1px;
-      border-radius: 28px;
+      border-radius: 22px;
       background: linear-gradient(135deg, rgba(14, 165, 233, 0.38), rgba(88, 199, 107, 0.36), rgba(255, 122, 26, 0.18));
       mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       mask-composite: exclude;
@@ -244,9 +244,82 @@
       z-index: 2;
     }
 
+    .frame-grid {
+      width: 100%;
+      height: 100%;
+      padding: 7px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+
+    .frame-grid.multi-view {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .frame-grid.stack-view {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      padding-right: 10px;
+    }
+
+    .frame-grid.stack-view .frame-panel {
+      flex: 0 0 calc(100vh - 96px);
+      min-height: 620px;
+    }
+
+    .frame-grid.stack-view::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .frame-grid.stack-view::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(14, 165, 233, 0.42), rgba(88, 199, 107, 0.42));
+      border: 2px solid rgba(255, 255, 255, 0.88);
+    }
+
+    .frame-panel {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 17px;
+      background: #ffffff;
+      border: 1px solid rgba(177, 223, 235, 0.85);
+      box-shadow: 0 6px 18px rgba(30, 79, 110, 0.08);
+    }
+
+    .frame-panel.single-view .frame-label {
+      display: none;
+    }
+
+    .frame-label {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      font-size: 11px;
+      font-weight: 900;
+      color: #0f6678;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      background: linear-gradient(90deg, rgba(14, 165, 233, 0.1), rgba(88, 199, 107, 0.1));
+      border-bottom: 1px solid rgba(177, 223, 235, 0.72);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     iframe {
       width: 100%;
       height: 100%;
+      flex: 1;
+      min-height: 0;
       border: none;
       display: block;
       background: #ffffff;
@@ -269,21 +342,21 @@
     }
 
     .loading-card {
-      min-width: 260px;
-      padding: 22px 26px;
-      border-radius: 24px;
+      min-width: 240px;
+      padding: 18px 22px;
+      border-radius: 22px;
       text-align: center;
       background: rgba(255,255,255,0.9);
       border: 1px solid rgba(178, 224, 235, 0.9);
-      box-shadow: 0 16px 45px rgba(30, 79, 110, 0.16);
+      box-shadow: 0 14px 38px rgba(30, 79, 110, 0.14);
     }
 
     .spinner {
-      width: 46px;
-      height: 46px;
-      margin: 0 auto 12px;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 10px;
       border-radius: 50%;
-      border: 5px solid rgba(14, 165, 233, 0.16);
+      border: 4px solid rgba(14, 165, 233, 0.16);
       border-top-color: var(--teal);
       border-right-color: var(--green);
       animation: spin 0.8s linear infinite;
@@ -294,24 +367,36 @@
     }
 
     .loading-text {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 900;
       color: var(--dark);
     }
 
     .mobile-label {
       display: none;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.1px;
       color: var(--muted);
       text-transform: uppercase;
+    }
+
+    @media (max-width: 1280px) {
+      .tab-button {
+        min-width: 96px;
+        padding: 0 10px;
+      }
+
+      .brand {
+        min-width: 195px;
+      }
     }
 
     @media (max-width: 1100px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
+        min-height: auto;
       }
 
       .brand {
@@ -322,33 +407,41 @@
         width: 100%;
         justify-content: flex-start;
       }
+
+      .frame-grid.multi-view {
+        grid-template-columns: 1fr;
+      }
+
+      .frame-grid.stack-view .frame-panel {
+        flex-basis: calc(100vh - 142px);
+        min-height: 560px;
+      }
     }
 
     @media (max-width: 768px) {
       .app {
-        padding: 8px;
-        gap: 8px;
+        padding: 6px;
+        gap: 6px;
       }
 
       .topbar {
-        min-height: auto;
-        padding: 12px;
-        border-radius: 22px;
+        padding: 8px;
+        border-radius: 18px;
       }
 
       .brand-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 15px;
-        font-size: 21px;
+        width: 32px;
+        height: 32px;
+        border-radius: 12px;
+        font-size: 16px;
       }
 
       .page-title {
-        font-size: 17px;
+        font-size: 15px;
       }
 
       .eyebrow {
-        font-size: 10px;
+        font-size: 8px;
       }
 
       .mobile-label {
@@ -357,7 +450,7 @@
       }
 
       .tab-button {
-        flex: 1 1 calc(50% - 8px);
+        flex: 1 1 calc(50% - 7px);
         min-width: 0;
       }
 
@@ -367,7 +460,21 @@
       }
 
       .frame-shell {
-        border-radius: 20px;
+        border-radius: 18px;
+      }
+
+      .frame-grid {
+        padding: 5px;
+        gap: 5px;
+      }
+
+      .frame-grid.stack-view {
+        padding-right: 6px;
+      }
+
+      .frame-grid.stack-view .frame-panel {
+        flex-basis: calc(100vh - 158px);
+        min-height: 520px;
       }
     }
   </style>
@@ -391,12 +498,16 @@
         <button class="tab-button" data-key="hcm">Hồ Chí Minh</button>
         <button class="tab-button" data-key="hn">Hà Nội</button>
         <button class="tab-button" data-key="dn">Đà Nẵng</button>
+        <button class="tab-button" data-key="all3">Xem 3 miền</button>
+        <button class="tab-button" data-key="all4">Xem tất cả</button>
 
         <select class="select-screen" id="screenSelect" aria-label="Chọn màn hình KPI">
           <option value="total">KPI Tổng</option>
           <option value="hcm">Hồ Chí Minh</option>
           <option value="hn">Hà Nội</option>
           <option value="dn">Đà Nẵng</option>
+          <option value="all3">Xem 3 miền</option>
+          <option value="all4">Xem tất cả</option>
         </select>
 
         <button class="reload-button" id="reloadButton" title="Tải lại màn hình">↻</button>
@@ -411,11 +522,13 @@
         </div>
       </div>
 
-      <iframe id="kpiFrame" src="" title="KPI Warrior Dashboard"></iframe>
+      <div class="frame-grid" id="frameGrid"></div>
     </main>
   </div>
 
   <script>
+    const STORAGE_KEY = "warrior-dashboard-active-key";
+
     const dashboards = {
       total: {
         title: "KPI Tổng",
@@ -432,10 +545,20 @@
       dn: {
         title: "KPI Đà Nẵng",
         url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_dn&type=warrior"
+      },
+      all3: {
+        title: "KPI 3 Miền",
+        frames: ["hcm", "hn", "dn"],
+        layout: "grid"
+      },
+      all4: {
+        title: "Xem tất cả",
+        frames: ["total", "hcm", "hn", "dn"],
+        layout: "stack"
       }
     };
 
-    const iframe = document.getElementById("kpiFrame");
+    const frameGrid = document.getElementById("frameGrid");
     const pageTitle = document.getElementById("pageTitle");
     const screenSelect = document.getElementById("screenSelect");
     const loading = document.getElementById("loading");
@@ -443,6 +566,7 @@
     const buttons = document.querySelectorAll(".tab-button");
 
     let currentKey = "total";
+    let pendingFrames = 0;
 
     function setActiveButton(key) {
       buttons.forEach(button => {
@@ -458,20 +582,77 @@
       loading.classList.remove("show");
     }
 
-    function changeDashboard(key) {
-      const dashboard = dashboards[key];
+    function saveLastDashboard(key) {
+      localStorage.setItem(STORAGE_KEY, key);
+    }
 
+    function getInitialDashboardKey() {
+      const savedKey = localStorage.getItem(STORAGE_KEY);
+      return dashboards[savedKey] ? savedKey : "total";
+    }
+
+    function addReloadParam(url) {
+      const separator = url.includes("?") ? "&" : "?";
+      return url + separator + "reload=" + Date.now();
+    }
+
+    function createFramePanel(frameKey, forceReload = false) {
+      const dashboard = dashboards[frameKey];
+      const panel = document.createElement("section");
+      const label = document.createElement("div");
+      const iframe = document.createElement("iframe");
+
+      panel.className = "frame-panel";
+      label.className = "frame-label";
+      label.textContent = dashboard.title;
+
+      iframe.title = dashboard.title;
+      iframe.src = forceReload ? addReloadParam(dashboard.url) : dashboard.url;
+      iframe.addEventListener("load", () => {
+        pendingFrames -= 1;
+        if (pendingFrames <= 0) hideLoading();
+      });
+
+      panel.appendChild(label);
+      panel.appendChild(iframe);
+      return panel;
+    }
+
+    function renderFrames(key, forceReload = false) {
+      const dashboard = dashboards[key];
+      const frameKeys = dashboard.frames || [key];
+      const layout = dashboard.layout || (frameKeys.length > 1 ? "grid" : "single");
+
+      pendingFrames = frameKeys.length;
+      frameGrid.innerHTML = "";
+      frameGrid.classList.toggle("multi-view", layout === "grid");
+      frameGrid.classList.toggle("stack-view", layout === "stack");
+
+      frameKeys.forEach(frameKey => {
+        const panel = createFramePanel(frameKey, forceReload);
+        if (layout === "single") panel.classList.add("single-view");
+        frameGrid.appendChild(panel);
+      });
+    }
+
+    function changeDashboard(key, forceReload = false) {
+      const dashboard = dashboards[key];
       if (!dashboard) return;
 
       currentKey = key;
-      showLoading();
+      saveLastDashboard(key);
+
+      if (dashboard.frames) {
+        hideLoading();
+      } else {
+        showLoading();
+      }
 
       pageTitle.textContent = dashboard.title;
-      document.title = dashboard.title + " | Warrior Dashboard";
+      document.title = "Warrior Dashboard";
       screenSelect.value = key;
       setActiveButton(key);
-
-      iframe.src = dashboard.url;
+      renderFrames(key, forceReload);
     }
 
     buttons.forEach(button => {
@@ -485,16 +666,10 @@
     });
 
     reloadButton.addEventListener("click", () => {
-      const url = dashboards[currentKey].url;
-      showLoading();
-      iframe.src = url + "&reload=" + Date.now();
+      changeDashboard(currentKey, true);
     });
 
-    iframe.addEventListener("load", () => {
-      hideLoading();
-    });
-
-    changeDashboard("total");
+    changeDashboard(getInitialDashboardKey());
   </script>
 </body>
 </html>
