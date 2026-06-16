@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KPI Warrior Dashboard</title>
+
+  <style>
+    :root {
+      --teal: #0f9f9a;
+      --cyan: #0ea5e9;
+      --green: #58c76b;
+      --lime: #98c93c;
+      --orange: #ff7a1a;
+      --dark: #172033;
+      --muted: #66738a;
+      --line: #c9e8f1;
+      --card: rgba(255, 255, 255, 0.82);
+      --shadow: 0 12px 35px rgba(30, 79, 110, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(40, 201, 214, 0.22), transparent 35%),
+        radial-gradient(circle at top right, rgba(104, 210, 93, 0.2), transparent 35%),
+        linear-gradient(135deg, #edf9ff 0%, #f7fffb 45%, #f4f8ff 100%);
+      color: var(--dark);
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      gap: 12px;
+    }
+
+    .topbar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 76px;
+      padding: 12px 18px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(241, 253, 255, 0.88)),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.13), rgba(88, 199, 107, 0.13));
+      border: 1px solid rgba(168, 221, 235, 0.95);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .topbar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(15, 159, 154, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 159, 154, 0.055) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .brand {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 270px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--cyan), var(--teal) 48%, var(--green));
+      color: #fff;
+      font-size: 24px;
+      box-shadow: 0 10px 24px rgba(15, 159, 154, 0.26);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #0795b3 0%, #0fb983 48%, #88bd26 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      white-space: nowrap;
+    }
+
+    .nav-zone {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .tab-button,
+    .select-screen,
+    .reload-button {
+      height: 44px;
+      border-radius: 16px;
+      border: 1px solid rgba(184, 205, 221, 0.95);
+      background: rgba(255, 255, 255, 0.78);
+      color: #2d3748;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      box-shadow: 0 4px 12px rgba(45, 68, 95, 0.06);
+    }
+
+    .tab-button {
+      min-width: 126px;
+      padding: 0 18px;
+    }
+
+    .tab-button:hover,
+    .reload-button:hover,
+    .select-screen:hover {
+      transform: translateY(-1px);
+      border-color: rgba(15, 159, 154, 0.55);
+      box-shadow: 0 10px 22px rgba(30, 79, 110, 0.12);
+    }
+
+    .tab-button.active {
+      border: none;
+      color: #ffffff;
+      background: linear-gradient(135deg, #0894b3 0%, #12b886 50%, #72c247 100%);
+      box-shadow: 0 10px 26px rgba(17, 173, 137, 0.32);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-button.active::after {
+      content: "";
+      position: absolute;
+      top: -40%;
+      left: -30%;
+      width: 70%;
+      height: 180%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+      transform: rotate(18deg);
+      animation: shine 2.8s linear infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -70%; }
+      100% { left: 120%; }
+    }
+
+    .select-screen {
+      min-width: 170px;
+      padding: 0 42px 0 16px;
+      outline: none;
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #172033 50%),
+        linear-gradient(135deg, #172033 50%, transparent 50%),
+        linear-gradient(135deg, rgba(255,255,255,0.9), rgba(245,253,255,0.84));
+      background-position:
+        calc(100% - 22px) 19px,
+        calc(100% - 16px) 19px,
+        0 0;
+      background-size:
+        6px 6px,
+        6px 6px,
+        100% 100%;
+      background-repeat: no-repeat;
+    }
+
+    .reload-button {
+      width: 44px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      font-size: 18px;
+    }
+
+    .frame-shell {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.96), rgba(238, 252, 255, 0.88)),
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(88, 199, 107, 0.12), transparent 30%);
+      border: 1px solid rgba(177, 223, 235, 0.95);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .frame-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.38), rgba(88, 199, 107, 0.36), rgba(255, 122, 26, 0.18));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #ffffff;
+    }
+
+    .loading {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.92), rgba(239,252,255,0.86));
+      backdrop-filter: blur(6px);
+    }
+
+    .loading.show {
+      display: flex;
+    }
+
+    .loading-card {
+      min-width: 260px;
+      padding: 22px 26px;
+      border-radius: 24px;
+      text-align: center;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(178, 224, 235, 0.9);
+      box-shadow: 0 16px 45px rgba(30, 79, 110, 0.16);
+    }
+
+    .spinner {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      border: 5px solid rgba(14, 165, 233, 0.16);
+      border-top-color: var(--teal);
+      border-right-color: var(--green);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--dark);
+    }
+
+    .mobile-label {
+      display: none;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 1100px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand {
+        width: 100%;
+      }
+
+      .nav-zone {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app {
+        padding: 8px;
+        gap: 8px;
+      }
+
+      .topbar {
+        min-height: auto;
+        padding: 12px;
+        border-radius: 22px;
+      }
+
+      .brand-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
+        font-size: 21px;
+      }
+
+      .page-title {
+        font-size: 17px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+      }
+
+      .mobile-label {
+        display: block;
+        width: 100%;
+      }
+
+      .tab-button {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 0;
+      }
+
+      .select-screen {
+        flex: 1 1 100%;
+        width: 100%;
+      }
+
+      .frame-shell {
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <div class="eyebrow">All-Star Race Dashboard</div>
+          <h1 class="page-title" id="pageTitle">KPI Tổng</h1>
+        </div>
+      </div>
+
+      <nav class="nav-zone" aria-label="Chuyển màn hình KPI">
+        <div class="mobile-label">Chọn khu vực</div>
+
+        <button class="tab-button active" data-key="total">KPI Tổng</button>
+        <button class="tab-button" data-key="hcm">Hồ Chí Minh</button>
+        <button class="tab-button" data-key="hn">Hà Nội</button>
+        <button class="tab-button" data-key="dn">Đà Nẵng</button>
+
+        <select class="select-screen" id="screenSelect" aria-label="Chọn màn hình KPI">
+          <option value="total">KPI Tổng</option>
+          <option value="hcm">Hồ Chí Minh</option>
+          <option value="hn">Hà Nội</option>
+          <option value="dn">Đà Nẵng</option>
+        </select>
+
+        <button class="reload-button" id="reloadButton" title="Tải lại màn hình">↻</button>
+      </nav>
+    </header>
+
+    <main class="frame-shell">
+      <div class="loading" id="loading">
+        <div class="loading-card">
+          <div class="spinner"></div>
+          <div class="loading-text">Đang tải bảng xếp hạng...</div>
+        </div>
+      </div>
+
+      <iframe id="kpiFrame" src="" title="KPI Warrior Dashboard"></iframe>
+    </main>
+  </div>
+
+  <script>
+    const dashboards = {
+      total: {
+        title: "KPI Tổng",
+        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_total&type=warrior"
+      },
+      hcm: {
+        title: "KPI Hồ Chí Minh",
+        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_hcm&type=warrior"
+      },
+      hn: {
+        title: "KPI Hà Nội",
+        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_hn&type=warrior"
+      },
+      dn: {
+        title: "KPI Đà Nẵng",
+        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_dn&type=warrior"
+      }
+    };
+
+    const iframe = document.getElementById("kpiFrame");
+    const pageTitle = document.getElementById("pageTitle");
+    const screenSelect = document.getElementById("screenSelect");
+    const loading = document.getElementById("loading");
+    const reloadButton = document.getElementById("reloadButton");
+    const buttons = document.querySelectorAll(".tab-button");
+
+    let currentKey = "total";
+
+    function setActiveButton(key) {
+      buttons.forEach(button => {
+        button.classList.toggle("active", button.dataset.key === key);
+      });
+    }
+
+    function showLoading() {
+      loading.classList.add("show");
+    }
+
+    function hideLoading() {
+      loading.classList.remove("show");
+    }
+
+    function changeDashboard(key) {
+      const dashboard = dashboards[key];
+
+      if (!dashboard) return;
+
+      currentKey = key;
+      showLoading();
+
+      pageTitle.textContent = dashboard.title;
+      document.title = dashboard.title + " | Warrior Dashboard";
+      screenSelect.value = key;
+      setActiveButton(key);
+
+      iframe.src = dashboard.url;
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        changeDashboard(button.dataset.key);
+      });
+    });
+
+    screenSelect.addEventListener("change", event => {
+      changeDashboard(event.target.value);
+    });
+
+    reloadButton.addEventListener("click", () => {
+      const url = dashboards[currentKey].url;
+      showLoading();
+      iframe.src = url + "&reload=" + Date.now();
+    });
+
+    iframe.addEventListener("load", () => {
+      hideLoading();
+    });
+
+    changeDashboard("total");
+  </script>
+</body>
+</html>
