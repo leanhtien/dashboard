@@ -217,6 +217,64 @@
       font-size: 16px;
     }
 
+    /* Month selector */
+    .month-divider {
+      width: 1px;
+      height: 22px;
+      background: rgba(148, 163, 184, 0.35);
+      margin: 0 2px;
+    }
+
+    .month-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .month-label {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .month-picker {
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(184, 205, 221, 0.95);
+      background: rgba(255, 255, 255, 0.78);
+      color: #2d3748;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.15px;
+      cursor: pointer;
+      padding: 0 10px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      min-width: 160px;
+    }
+
+    .month-picker:hover {
+      border-color: rgba(15, 159, 154, 0.55);
+      box-shadow: 0 4px 12px rgba(30, 79, 110, 0.1);
+    }
+
+    .month-picker.history-active {
+      border-color: rgba(14, 165, 233, 0.6);
+      background: linear-gradient(135deg, rgba(240,249,255,0.95), rgba(255,255,255,0.9));
+      color: #0369a1;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+    }
+
+    @media (max-width: 768px) {
+      .month-select-wrap { width: 100%; }
+      .month-picker { flex: 1; }
+      .month-divider { display: none; }
+    }
+
     .frame-shell {
       position: relative;
       flex: 1;
@@ -511,6 +569,14 @@
         </select>
 
         <button class="reload-button" id="reloadButton" title="Tải lại màn hình">↻</button>
+
+        <div class="month-divider"></div>
+        <div class="month-select-wrap">
+          <span class="month-label">📅 Tháng</span>
+          <select class="month-picker" id="monthPicker" title="Chọn tháng để xem — tháng cũ sẽ cố định vào tất cả iframe">
+            <option value="">⏱ Hiện tại</option>
+          </select>
+        </div>
       </nav>
     </header>
 
@@ -527,24 +593,28 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "warrior-dashboard-active-key";
+    const STORAGE_KEY       = "warrior-dashboard-active-key";
+    const STORAGE_MONTH_KEY = "warrior-dashboard-month";
+
+    // Base GAS URL — dùng chung cho tất cả view
+    const GAS_BASE = "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec";
 
     const dashboards = {
       total: {
         title: "KPI Tổng",
-        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_total&type=warrior"
+        params: "view=kpi_total&type=warrior"
       },
       hcm: {
         title: "KPI Hồ Chí Minh",
-        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_hcm&type=warrior"
+        params: "view=kpi_hcm&type=warrior"
       },
       hn: {
         title: "KPI Hà Nội",
-        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_hn&type=warrior"
+        params: "view=kpi_hn&type=warrior"
       },
       dn: {
         title: "KPI Đà Nẵng",
-        url: "https://script.google.com/macros/s/AKfycbwquxx8e7LDCGsEQZGvPIuE6Q_LAVW5b4BtZXIjUt34qnryJYKapvpbU9jXBzQupn3WhA/exec?view=kpi_dn&type=warrior"
+        params: "view=kpi_dn&type=warrior"
       },
       all3: {
         title: "KPI 3 Miền",
@@ -558,15 +628,74 @@
       }
     };
 
-    const frameGrid = document.getElementById("frameGrid");
-    const pageTitle = document.getElementById("pageTitle");
+    const frameGrid    = document.getElementById("frameGrid");
+    const pageTitle    = document.getElementById("pageTitle");
     const screenSelect = document.getElementById("screenSelect");
-    const loading = document.getElementById("loading");
+    const loading      = document.getElementById("loading");
     const reloadButton = document.getElementById("reloadButton");
-    const buttons = document.querySelectorAll(".tab-button");
+    const monthPicker  = document.getElementById("monthPicker");
+    const buttons      = document.querySelectorAll(".tab-button");
 
-    let currentKey = "total";
+    let currentKey   = "total";
     let pendingFrames = 0;
+    let selectedMonth = ""; // "" = tháng hiện tại
+
+    // ============================================================
+    // Tính tháng hiện tại dạng "YYYY-MM"
+    // ============================================================
+    function getCurrentMonthKey() {
+      const now = new Date();
+      return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+    }
+
+    // ============================================================
+    // Tạo URL đầy đủ cho từng iframe, tự động gắn &month= nếu cần
+    // ============================================================
+    function buildIframeUrl(frameKey, forceReload = false) {
+      const dashboard = dashboards[frameKey];
+      if (!dashboard || !dashboard.params) return "";
+      let url = GAS_BASE + "?" + dashboard.params;
+      // Chỉ gắn &month= khi đang xem tháng cũ (không gắn khi tháng hiện tại để tránh lock dropdown)
+      if (selectedMonth && selectedMonth !== getCurrentMonthKey()) {
+        url += "&month=" + selectedMonth;
+      }
+      if (forceReload) url += "&reload=" + Date.now();
+      return url;
+    }
+
+    // ============================================================
+    // Load danh sách tháng lịch sử từ GAS (gọi 1 lần khi load trang)
+    // ============================================================
+    function loadAvailableMonths() {
+      // Gọi API GAS qua fetch để lấy danh sách tháng có snapshot
+      // Dùng endpoint đặc biệt: thêm ?action=getMonths
+      // GAS doGet sẽ trả về JSON nếu có action=getMonths
+      fetch(GAS_BASE + "?action=getMonths")
+        .then(r => r.json())
+        .then(months => {
+          if (!Array.isArray(months) || months.length === 0) return;
+          const currentKey = getCurrentMonthKey();
+          months.forEach(m => {
+            if (m === currentKey) return; // tháng hiện tại đã có option mặc định
+            const [y, mo] = m.split("-");
+            const opt = document.createElement("option");
+            opt.value = m;
+            opt.textContent = `📜 Tháng ${mo}/${y}`;
+            monthPicker.appendChild(opt);
+          });
+          // Restore tháng đã chọn từ localStorage
+          const saved = localStorage.getItem(STORAGE_MONTH_KEY) || "";
+          if (saved && saved !== currentKey) {
+            monthPicker.value = saved;
+            selectedMonth = saved;
+            monthPicker.classList.add("history-active");
+          }
+        })
+        .catch(() => {
+          // Nếu không load được (CORS, lỗi mạng) → chỉ có option "Hiện tại", vẫn hoạt động
+          console.log("Không load được danh sách tháng lịch sử — chỉ hiện tháng hiện tại");
+        });
+    }
 
     function setActiveButton(key) {
       buttons.forEach(button => {
@@ -574,32 +703,19 @@
       });
     }
 
-    function showLoading() {
-      loading.classList.add("show");
-    }
+    function showLoading() { loading.classList.add("show"); }
+    function hideLoading() { loading.classList.remove("show"); }
 
-    function hideLoading() {
-      loading.classList.remove("show");
-    }
-
-    function saveLastDashboard(key) {
-      localStorage.setItem(STORAGE_KEY, key);
-    }
-
+    function saveLastDashboard(key) { localStorage.setItem(STORAGE_KEY, key); }
     function getInitialDashboardKey() {
       const savedKey = localStorage.getItem(STORAGE_KEY);
       return dashboards[savedKey] ? savedKey : "total";
     }
 
-    function addReloadParam(url) {
-      const separator = url.includes("?") ? "&" : "?";
-      return url + separator + "reload=" + Date.now();
-    }
-
     function createFramePanel(frameKey, forceReload = false) {
       const dashboard = dashboards[frameKey];
-      const panel = document.createElement("section");
-      const label = document.createElement("div");
+      const panel  = document.createElement("section");
+      const label  = document.createElement("div");
       const iframe = document.createElement("iframe");
 
       panel.className = "frame-panel";
@@ -607,7 +723,7 @@
       label.textContent = dashboard.title;
 
       iframe.title = dashboard.title;
-      iframe.src = forceReload ? addReloadParam(dashboard.url) : dashboard.url;
+      iframe.src   = buildIframeUrl(frameKey, forceReload);
       iframe.addEventListener("load", () => {
         pendingFrames -= 1;
         if (pendingFrames <= 0) hideLoading();
@@ -621,12 +737,12 @@
     function renderFrames(key, forceReload = false) {
       const dashboard = dashboards[key];
       const frameKeys = dashboard.frames || [key];
-      const layout = dashboard.layout || (frameKeys.length > 1 ? "grid" : "single");
+      const layout    = dashboard.layout || (frameKeys.length > 1 ? "grid" : "single");
 
-      pendingFrames = frameKeys.length;
+      pendingFrames  = frameKeys.length;
       frameGrid.innerHTML = "";
-      frameGrid.classList.toggle("multi-view", layout === "grid");
-      frameGrid.classList.toggle("stack-view", layout === "stack");
+      frameGrid.classList.toggle("multi-view",  layout === "grid");
+      frameGrid.classList.toggle("stack-view",  layout === "stack");
 
       frameKeys.forEach(frameKey => {
         const panel = createFramePanel(frameKey, forceReload);
@@ -642,22 +758,78 @@
       currentKey = key;
       saveLastDashboard(key);
 
-      if (dashboard.frames) {
-        hideLoading();
-      } else {
-        showLoading();
-      }
+      if (dashboard.frames) { hideLoading(); } else { showLoading(); }
 
-      pageTitle.textContent = dashboard.title;
-      document.title = "Warrior Dashboard";
-      screenSelect.value = key;
+      pageTitle.textContent  = dashboard.title;
+      document.title         = "Warrior Dashboard";
+      screenSelect.value     = key;
       setActiveButton(key);
       renderFrames(key, forceReload);
     }
 
+    // ============================================================
+    // Đọc params từ URL hash — hỗ trợ:
+    //   #month=2026-06
+    //   #view=hcm
+    //   #month=2026-06&view=hcm
+    // Hash không cần server xử lý → hoạt động trên GitHub Pages
+    // ============================================================
+    function parseHash() {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash) return {};
+      const params = {};
+      hash.split("&").forEach(part => {
+        const [k, v] = part.split("=");
+        if (k && v) params[decodeURIComponent(k)] = decodeURIComponent(v);
+      });
+      return params;
+    }
+
+    function applyHashParams() {
+      const params = parseHash();
+
+      // ?month từ hash — ưu tiên cao nhất, override localStorage
+      if (params.month) {
+        selectedMonth = params.month;
+        monthPicker.value = params.month;
+        const isHistory = selectedMonth !== getCurrentMonthKey();
+        monthPicker.classList.toggle("history-active", isHistory);
+        // Không lưu vào localStorage khi từ hash (để tab khác không bị ảnh hưởng)
+      }
+
+      // ?view từ hash — override localStorage
+      if (params.view && dashboards[params.view]) {
+        return params.view; // trả về key để changeDashboard dùng
+      }
+      return null;
+    }
+
+    // ============================================================
+    // Xử lý đổi tháng
+    // ============================================================
+    monthPicker.addEventListener("change", () => {
+      selectedMonth = monthPicker.value;
+      localStorage.setItem(STORAGE_MONTH_KEY, selectedMonth);
+      const isHistory = selectedMonth && selectedMonth !== getCurrentMonthKey();
+      monthPicker.classList.toggle("history-active", isHistory);
+      // Cập nhật hash trên URL (không reload trang) để URL có thể share được
+      const currentHash = parseHash();
+      currentHash.month = selectedMonth || "";
+      if (!currentHash.month) delete currentHash.month;
+      const newHash = Object.entries(currentHash).map(([k,v]) => k+"="+v).join("&");
+      history.replaceState(null, "", newHash ? "#" + newHash : window.location.pathname);
+      changeDashboard(currentKey, false);
+    });
+
     buttons.forEach(button => {
       button.addEventListener("click", () => {
-        changeDashboard(button.dataset.key);
+        const key = button.dataset.key;
+        // Cập nhật hash view khi đổi tab
+        const currentHash = parseHash();
+        currentHash.view = key;
+        const newHash = Object.entries(currentHash).map(([k,v]) => k+"="+v).join("&");
+        history.replaceState(null, "", "#" + newHash);
+        changeDashboard(key);
       });
     });
 
@@ -669,7 +841,12 @@
       changeDashboard(currentKey, true);
     });
 
-    changeDashboard(getInitialDashboardKey());
+    // ============================================================
+    // Khởi động — ưu tiên hash > localStorage
+    // ============================================================
+    loadAvailableMonths();
+    const hashViewKey = applyHashParams(); // đọc hash trước
+    changeDashboard(hashViewKey || getInitialDashboardKey());
   </script>
 </body>
 </html>
